@@ -12,6 +12,19 @@ public class Workout implements Serializable{
 
     public Workout(GymMember member, LinkedList<LocalDateTime> workoutHistory) {
         this.member = member;
-        this.workoutHistory = workoutHistory;
+        this.workoutHistory = member.getWorkoutHistory();
     }
+
+    public String getNameOfClient() {
+        return this.member.getName();
+    }
+
+    public long getSocialOfClinet() {
+        return this.member.getSocialSecurity();
+    }
+
+    public LinkedList<LocalDateTime> getWorkoutHistory() {
+        return this.workoutHistory;
+    }
+
 }

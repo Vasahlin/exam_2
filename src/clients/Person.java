@@ -1,10 +1,12 @@
 package clients;
 
-public class Person {
-    String name;
-    String socialSecurity;
+import java.io.Serializable;
 
-    public Person(String name, String socialSecurity) {
+public class Person implements Serializable {
+    String name;
+    long socialSecurity;
+
+    public Person(String name, long socialSecurity) {
         this.name = name;
         this.socialSecurity = socialSecurity;
     }
@@ -13,7 +15,7 @@ public class Person {
         return name;
     }
 
-    public String getSocialSecurity() {
+    public long getSocialSecurity() {
         return socialSecurity;
     }
 }

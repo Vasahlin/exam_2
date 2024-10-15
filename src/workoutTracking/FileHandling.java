@@ -5,15 +5,18 @@ import clients.GymMember;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class FileHandling {
     public static final String DATA_EXT = ".dat";
     public static final String INDEX_EXT = ".idx";
     public static final int INDEX_SIZE = Long.SIZE / 8;
-    private static FileChannel index_file = null;
-    private static FileChannel data_file = null;
+    private static FileChannel indexChannel;
+    private static FileChannel dataChannel;
     final static String fileName = String.format(
             "%s\\src\\workoutTracking\\workoutList", System.getProperty("user.dir"));
+    protected static boolean test;
 
 
     protected static byte[] serializeWorkout(GymMember member) throws IOException {
@@ -35,33 +38,41 @@ public class FileHandling {
         }
     }
 
-    public static long appendEntry(GymMember member) throws IOException {
-        try (RandomAccessFile raf_1 = new RandomAccessFile(fileName + INDEX_EXT, "rw");
-             RandomAccessFile raf_2 = new RandomAccessFile(fileName + DATA_EXT, "rw")) {
+    public static long appendWorkoutToFile(GymMember member, Path optionalTestPath) throws IOException {
+        Path dataPath, indexPath;
+        if (test) {
+            dataPath = Paths.get(optionalTestPath + DATA_EXT);
+            indexPath = Paths.get(optionalTestPath + INDEX_EXT);
+        } else {
+            dataPath = Paths.get(fileName + DATA_EXT);
+            indexPath = Paths.get(fileName + INDEX_EXT);
+        }
 
-            index_file = raf_1.getChannel();
-            index_file.force(true);
-            data_file = raf_2.getChannel();
-            data_file.force(true);
+        try (RandomAccessFile raf_1 = new RandomAccessFile(indexPath.toString(), "rw");
+             RandomAccessFile raf_2 = new RandomAccessFile(dataPath.toString(), "rw")) {
 
-            // Calculate the data index for append to data
-            // file and append its value to the index file.
-            long byteOffset = index_file.size();
+            indexChannel = raf_1.getChannel();
+            indexChannel.force(true);
+            dataChannel = raf_2.getChannel();
+            dataChannel.force(true);
+
+            // Calculate the data index for append to data file
+            // & append its value to the index file.
+            long byteOffset = indexChannel.size();
             long index = byteOffset / (long) INDEX_SIZE;
-            long dataOffset = (int) data_file.size();
-            ByteBuffer bb = ByteBuffer.allocate(INDEX_SIZE);
-            bb.putLong(dataOffset);
-            bb.flip();
-            index_file.position(byteOffset);
-            int writtenBytes = index_file.write(bb);
+            long dataOffset = (int) dataChannel.size();
+            ByteBuffer byteBuffer = ByteBuffer.allocate(INDEX_SIZE);
+            byteBuffer.putLong(dataOffset);
+            byteBuffer.flip();
+            indexChannel.position(byteOffset);
+            int writtenBytes = indexChannel.write(byteBuffer);
 
             if (writtenBytes == 0) {
                 return -1;
             }
 
-            // Append serialized object data to the data file.
-            data_file.position(dataOffset);
-            writtenBytes = data_file.write(ByteBuffer.wrap(serializeWorkout(member)));
+            dataChannel.position(dataOffset);
+            writtenBytes = dataChannel.write(ByteBuffer.wrap(serializeWorkout(member)));
 
             if (writtenBytes == 0) {
                 return -1;
@@ -69,39 +80,52 @@ public class FileHandling {
 
             return index;
         }
-
-        public Entry readEntry(long index)
-            throws IOException, ClassNotFoundException {
-
-            // Get the data index and -length from the index file.
-            long byteOffset = index * (long) EntryFile.INDEX_SIZE;
-            ByteBuffer bbi = ByteBuffer.allocate(EntryFile.INDEX_SIZE);
-            fci.position(byteOffset);
-            if (fci.read(bbi) == -1) {
-                throw new IndexOutOfBoundsException("Specified index is out of range");
-            }
-            bbi.flip();
-            long dataOffset = bbi.getLong();
-            bbi.rewind();
-            long dataOffsetNext;
-            if (fci.read(bbi) == -1) {
-                dataOffsetNext = fcd.size();
-            } else {
-                bbi.flip();
-                dataOffsetNext = bbi.getLong();
-            }
-            int dataSize = (int) (dataOffsetNext - dataOffset);
-
-            // Get the serialized object data in a byte array.
-            byte[] se = new byte[dataSize];
-            fcd.position(dataOffset);
-            fcd.read(ByteBuffer.wrap(se));
-
-            // Deserialize the byte array into an instantiated object.
-            return Entry.deserialize(se);
-        }
     }
 
+    public static Workout readWorkoutFromFile(long index, Path optionalTestPath)
+            throws IOException, ClassNotFoundException {
+        Path dataPath, indexPath;
+        if (test) {
+            dataPath = Paths.get(optionalTestPath + DATA_EXT);
+            indexPath = Paths.get(optionalTestPath + INDEX_EXT);
+        } else {
+            dataPath = Paths.get(fileName + DATA_EXT);
+            indexPath = Paths.get(fileName + INDEX_EXT);
+        }
+
+        try (RandomAccessFile raf_1 = new RandomAccessFile(indexPath.toString(), "rw");
+             RandomAccessFile raf_2 = new RandomAccessFile(dataPath.toString(), "rw")) {
+            indexChannel = raf_1.getChannel();
+            indexChannel.force(true);
+            dataChannel = raf_2.getChannel();
+            dataChannel.force(true);
+
+            ByteBuffer buffer = ByteBuffer.allocate(INDEX_SIZE);
+
+            long byteOffset = index * (long) INDEX_SIZE;
+            indexChannel.position(byteOffset);
+            if (indexChannel.read(buffer) == -1) {
+                throw new IndexOutOfBoundsException("Specified index out of bounds");
+            }
+            buffer.flip();
+            long dataOffset = buffer.getLong();
+            buffer.rewind();
+
+            long dataNextOffset;
+            if (indexChannel.read(buffer) == -1) {
+                dataNextOffset = dataChannel.size();
+            } else {
+                buffer.flip();
+                dataNextOffset = buffer.getLong();
+            }
+
+            int dataSize = (int) (dataNextOffset - dataOffset);
+            byte[] toSerialize = new byte[dataSize];
+            dataChannel.position(dataOffset);
+            dataChannel.read(ByteBuffer.wrap(toSerialize));
+
+            return deserializeWorkout(toSerialize);
+        }
+    }
 }
 
-}
