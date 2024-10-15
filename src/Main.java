@@ -14,5 +14,7 @@ public class Main {
         LinkedList<LocalDateTime> list = new LinkedList<>(List.of(LocalDateTime.now()));
         GymMember m = new GymMember("asd", "XXXX-XXXX", list);
         FileHandling.appendEntry(m);
+
     }
 }
+

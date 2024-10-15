@@ -69,6 +69,39 @@ public class FileHandling {
 
             return index;
         }
+
+        public Entry readEntry(long index)
+            throws IOException, ClassNotFoundException {
+
+            // Get the data index and -length from the index file.
+            long byteOffset = index * (long) EntryFile.INDEX_SIZE;
+            ByteBuffer bbi = ByteBuffer.allocate(EntryFile.INDEX_SIZE);
+            fci.position(byteOffset);
+            if (fci.read(bbi) == -1) {
+                throw new IndexOutOfBoundsException("Specified index is out of range");
+            }
+            bbi.flip();
+            long dataOffset = bbi.getLong();
+            bbi.rewind();
+            long dataOffsetNext;
+            if (fci.read(bbi) == -1) {
+                dataOffsetNext = fcd.size();
+            } else {
+                bbi.flip();
+                dataOffsetNext = bbi.getLong();
+            }
+            int dataSize = (int) (dataOffsetNext - dataOffset);
+
+            // Get the serialized object data in a byte array.
+            byte[] se = new byte[dataSize];
+            fcd.position(dataOffset);
+            fcd.read(ByteBuffer.wrap(se));
+
+            // Deserialize the byte array into an instantiated object.
+            return Entry.deserialize(se);
+        }
     }
+
+}
 
 }
