@@ -1,6 +1,8 @@
 package clients;
 
 
+import util.Text;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -46,5 +48,16 @@ public class GymMember extends Person implements Serializable {
 
     public LinkedList<LocalDateTime> getWorkoutHistory() {
         return workoutHistory;
+    }
+
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(this.getName()).
+                append(", ").
+                append(Text.addHyphen(this.getSocialSecurity())).
+                append(System.lineSeparator()).
+                append("Membership status: ").
+                append(this.activeMembership);
+        return builder.toString();
     }
 }

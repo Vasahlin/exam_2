@@ -24,6 +24,7 @@ class ValidateTest {
                 Validate.validateSocialSecurity("12345-1234"));
         e = assertThrows(IllegalArgumentException.class, () ->
                 Validate.validateSocialSecurity("123456-123"));
+        assertEquals("Social security was not properly formatted", e.getMessage());
         e = assertThrows(IllegalArgumentException.class, () ->
                 Validate.validateSocialSecurity("123456-12345"));
         e = assertThrows(IllegalArgumentException.class, () ->
@@ -66,4 +67,11 @@ class ValidateTest {
     }
 
 
+    @Test
+    void ableToParseSocial() {
+       assertTrue(Validate.ableToParseSocial("891023-1234"));
+       assertFalse(Validate.ableToParseSocial("891023-12345"));
+       assertFalse(Validate.ableToParseSocial("8910232-1234"));
+       assertFalse(Validate.ableToParseSocial("891023-a12"));
+    }
 }

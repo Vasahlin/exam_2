@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Members {
-    private ArrayList<GymMember> memberList = new ArrayList<>();
+    private ArrayList<GymMember> memberList;
 
     public Members(ArrayList<GymMember> memberList) {
         this.memberList = memberList;
         this.updateMemberships();
+        this.sortBySocial();
     }
 
     public GymMember getMember(int index) {
@@ -31,62 +32,48 @@ public class Members {
         }
     }
 
-    public boolean activeMember(String name) {
-        for (GymMember m : this.memberList) {
-            if (m.getName().equalsIgnoreCase(name) && m.activeMembership) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public boolean activeMember(Long socialSecurity) {
-        for (GymMember m : this.memberList) {
-            if (m.getSocialSecurity() == socialSecurity && m.activeMembership) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-   public int getMemberIndex(String name) {
-        for (int i = 0; i < this.memberList.size(); i++) {
-            if (this.memberList.get(i).getName().equalsIgnoreCase(name)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-   public int getMemberIndex(Long socialSecurity) { asdaqsdasd
-       for (int i = 0; i < this.memberList.size(); i++) {
-           if (this.memberList.get(i).getSocialSecurity() == socialSecurity) {
-               return i;
-           }
-       }
-       return -1;
-   }
-
-    public boolean memberExist(String name) {
-        name = name.trim();
-        for (GymMember m : this.memberList) {
-            if (name.equalsIgnoreCase(m.getName())) {
-                return true;
-            }
+        int index = getMemberIndex(socialSecurity);
+        if (index >= 0) {
+            return this.memberList.get(index).activeMembership;
         }
         return false;
     }
 
     public boolean memberExist(Long socialSecurity) {
-        for (GymMember m : this.memberList) {
-            if (socialSecurity == m.getSocialSecurity()) {
-                return true;
-            }
-        }
-        return false;
+        return getMemberIndex(socialSecurity) >= 0;
     }
 
     public void sortBySocial() {
         this.memberList.sort(Comparator.comparingLong(m -> m.socialSecurity));
+    }
+
+    public ArrayList<GymMember> getMembersByName(String name) {
+        ArrayList<GymMember> members = new ArrayList<>();
+        for (GymMember gymMember : this.memberList) {
+            if (gymMember.getName().equalsIgnoreCase(name)) {
+                members.add(gymMember);
+            }
+        }
+        return members;
+    }
+
+    public int getMemberIndex(Long socialSecurity) {
+        int left = 0, right = this.memberList.size() - 1;
+        int mid;
+        long midSocial;
+
+        while (left <= right) {
+            mid = left + (right - left) / 2;
+            midSocial = memberList.get(mid).getSocialSecurity();
+            if (midSocial == socialSecurity) {
+                return mid;
+            } else if (midSocial < socialSecurity) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return -1;
     }
 }

@@ -8,12 +8,12 @@ class TextTest {
 
     @Test
     void generateInstructions() {
-        java.lang.String expectedResult = """
+        String expectedResult = """
                 1. Register visit
                 2. Add membership
                 3. Add payment
                 4. Show member information
-                5. Edit member
+                5. Exit program
                 """;
         assertEquals(expectedResult, Text.generateMessage(Text.message.MAIN_MENU));
         expectedResult = "Enter name for member: ";
@@ -34,5 +34,15 @@ class TextTest {
                 Text.removeHyphen("12345"));
         e = assertThrows(IllegalArgumentException.class, () ->
                 Text.removeHyphen("12345-45467-1233"));
+    }
+
+    @Test
+    void testRemoveHyphen() {
+        String expected = "870823-1234";
+        String result = Text.addHyphen(8708231234L);
+        assertEquals(expected, result);
+        expected = "010823-1234";
+        result = Text.addHyphen(108231234L);
+        assertEquals(expected, result);
     }
 }

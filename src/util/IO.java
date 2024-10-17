@@ -39,16 +39,28 @@ public final class IO {
 
     public static void printMessage(Text.message instruction) {
         switch (instruction) {
-            case MAIN_MENU: System.out.print(
-                    Text.generateMessage(Text.message.MAIN_MENU));break;
+            case MAIN_MENU: System.out.println(
+                    Text.generateMessage(Text.message.MAIN_MENU));      break;
             case ENTER_CHOICE: System.out.print(
-                    Text.generateMessage(Text.message.ENTER_CHOICE));break;
+                    Text.generateMessage(Text.message.ENTER_CHOICE));   break;
             case ADD_MEMBER: System.out.print(
-                    Text.generateMessage(Text.message.ADD_MEMBER));break;
+                    Text.generateMessage(Text.message.ADD_MEMBER));     break;
             case MEMBER_NAME: System.out.print(
-                    Text.generateMessage(Text.message.MEMBER_NAME));break;
+                    Text.generateMessage(Text.message.MEMBER_NAME));    break;
             case MEMBER_SOCIAL: System.out.print(
-                    Text.generateMessage(Text.message.MEMBER_SOCIAL));break;
+                    Text.generateMessage(Text.message.MEMBER_SOCIAL));  break;
+            case MEMBER_ADDED: System.out.print(
+                    Text.generateMessage(Text.message.MEMBER_ADDED));   break;
+            case PAYMENT_MENU: System.out.print(
+                    Text.generateMessage(Text.message.PAYMENT_MENU));   break;
+            case PAYMENT_ADDED: System.out.print(
+                    Text.generateMessage(Text.message.PAYMENT_ADDED));  break;
+            case SHOW_MEMBER_MENU: System.out.print(
+                    Text.generateMessage(Text.message.SHOW_MEMBER_MENU));break;
+            case NAME_SOCIAL: System.out.print(
+                    Text.generateMessage(Text.message.NAME_SOCIAL));    break;
+            case NO_SUCH_MEMBER: System.out.print(
+                    Text.generateMessage(Text.message.NO_SUCH_MEMBER)); break;
             default: break;
         }
     }

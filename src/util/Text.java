@@ -5,7 +5,8 @@ public final class Text {
     public enum message {
         MAIN_MENU, ADD_MEMBER, ENTER_CHOICE,
         MEMBER_NAME, MEMBER_SOCIAL, MEMBER_ADDED,
-        PAYMENT_ADDED
+        PAYMENT_MENU, PAYMENT_ADDED, SHOW_MEMBER_MENU,
+        NAME_SOCIAL, NO_SUCH_MEMBER
 
     }
     public final static String RED = "\033[31m";
@@ -21,15 +22,18 @@ public final class Text {
                     2. Add membership
                     3. Add payment
                     4. Show member information
-                    5. Edit member
-                    6. Exit program
+                    5. Exit program
                     """;
             case ENTER_CHOICE -> "Enter choice: ";
             case ADD_MEMBER -> LS + "MODE: ADD MEMBER, enter " + YEL + "Exit" + RESET + " to escape" + LS;
             case MEMBER_NAME -> "Enter name for member: ";
             case MEMBER_SOCIAL -> "Enter social security for member: ";
             case MEMBER_ADDED -> "Member successfully added";
+            case PAYMENT_MENU -> LS + "MODE: ADD PAYMENT, enter " + YEL + "Exit" + RESET + " to escape" + LS;
             case PAYMENT_ADDED -> "Payment successfully added";
+            case SHOW_MEMBER_MENU -> LS + "MODE: SHOW MEMBER, enter " + YEL + "Exit" + RESET + " to escape" + LS;
+            case NAME_SOCIAL -> "Enter name or social security for member: ";
+            case NO_SUCH_MEMBER -> "No such member exists." + LS;
         };
     }
 
@@ -42,5 +46,18 @@ public final class Text {
             throw new IllegalArgumentException("Social security was not properly formatted");
         }
         return parts[0] + parts[1];
+    }
+
+    public static String addHyphen(long socialSecurity) {
+        StringBuilder builder = new StringBuilder();
+        String temp = Long.toString(socialSecurity);
+        if (socialSecurity < 1000000000) {
+            builder.append("0").append(temp, 0, 5).
+                    append("-").append(temp,5,9);
+        } else {
+            builder.append(temp,0,6).
+                    append("-").append(temp,6,10);
+        }
+        return builder.toString();
     }
 }

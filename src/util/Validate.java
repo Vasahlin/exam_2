@@ -14,7 +14,7 @@ public final class Validate {
     }
 
     public static boolean equalsExit(String toExamine) {
-        return toExamine.equalsIgnoreCase("exit");
+        return toExamine.equalsIgnoreCase("exit") || toExamine.equals("5");
     }
 
     public static boolean validName(String name) {
@@ -25,6 +25,15 @@ public final class Validate {
             }
         }
         return (count > 2);
+    }
+
+    public static boolean ableToParseSocial(String social) {
+        try {
+            validateSocialSecurity(social);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 
    public static String validateSocialSecurity(String social) throws IllegalArgumentException {

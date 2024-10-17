@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,42 +39,26 @@ class MembersTest {
 
     @Test
     void activeMember() {
-        assertTrue(m.activeMember("Alhambra Aromes"));
-        assertTrue(m.activeMember("ALHAMBRA AROMES"));
         assertTrue(m.activeMember(7703021234L));
-        assertFalse(m.activeMember("Bear Belle"));
-        assertFalse(m.activeMember("bear belle"));
         assertFalse(m.activeMember(8204021234L));
-        assertFalse(m.activeMember("Chamade Coriola"));
-        assertFalse(m.activeMember("cHamADE CORioLA"));
         assertFalse(m.activeMember(8512021234L));
     }
 
     @Test
     void memberIndex() {
-        assertEquals(0,m.getMemberIndex("Alhambra Aromes"));
-        assertEquals(0,m.getMemberIndex("ALHAMBRA AROMES"));
-        assertEquals(0,m.getMemberIndex(7703021234L));
-        assertEquals(1,m.getMemberIndex("Bear Belle"));
-        assertEquals(1,m.getMemberIndex("bear belle"));
-        assertEquals(1,m.getMemberIndex(8204021234L));
-        assertEquals(2,m.getMemberIndex("Chamade Coriola"));
-        assertEquals(2,m.getMemberIndex("cHamADE CORioLA"));
-        assertEquals(2,m.getMemberIndex(8512021234L));
-        assertEquals(-1,m.getMemberIndex("Not a Member"));
-        assertEquals(-1,m.getMemberIndex(1000000000L));
+        Members testList = new Members(m.getMemberList());
+        assertEquals(0, testList.getMemberIndex(7703021234L));
+        assertEquals(1, testList.getMemberIndex(8204021234L));
+        assertEquals(2, testList.getMemberIndex(8512021234L));
+        assertEquals(-1, testList.getMemberIndex(1000000000L));
+        testList.addMember(new GymMember("First", 7512021234L, LocalDate.parse("2018-03-12")));
+        assertEquals(0, testList.getMemberIndex(7512021234L));
     }
 
     @Test
     void exist() {
-        assertTrue(m.memberExist("Alhambra Aromes"));
-        assertTrue(m.memberExist("ALHAMBRA AROMES"));
         assertTrue(m.memberExist(7703021234L));
-        assertTrue(m.memberExist("Bear Belle"));
-        assertTrue(m.memberExist("bear belle"));
         assertTrue(m.memberExist(8204021234L));
-        assertTrue(m.memberExist("Chamade Coriola"));
-        assertTrue(m.memberExist("cHamADE CORioLA"));
         assertTrue(m.memberExist(8512021234L));
     }
 
@@ -83,5 +68,29 @@ class MembersTest {
         assertEquals("Alhambra Aromes", test.getMember(0).getName());
         test.addMember(new GymMember("First", 7512021234L, LocalDate.parse("2018-03-12")));
         assertEquals("First", test.getMember(0).getName());
+    }
+
+    @Test
+    void getMembersByName() {
+        GymMember m1 = new GymMember(
+                "Alhambra Aromes", 7703021234L, LocalDate.parse("2024-07-01"));
+        GymMember m2 = new GymMember(
+                "Alhambra Aromes", 7703024321L, LocalDate.parse("2024-07-01"));
+        ArrayList<GymMember> expected = new ArrayList<>(Arrays.asList(m1,m2));
+        expected.sort(Comparator.comparing(Person::getName));
+
+        Members testList = new Members(m.getMemberList());
+        testList.addMember(new GymMember(
+                "Alhambra Aromes", 7703024321L, LocalDate.parse("2024-07-01")));
+
+        ArrayList<GymMember> result = testList.getMembersByName("Alhambra Aromes");
+        result.sort(Comparator.comparing(Person::getName));
+
+        assertEquals(expected.size(), result.size());
+        for (int i = 0; i < expected.size(); i++) {
+            assertEquals(expected.get(i).getName(), result.get(i).getName());
+            assertEquals(expected.get(i).getSocialSecurity(), result.get(i).getSocialSecurity());
+            assertEquals(expected.get(i).getPaymentHistory(), result.get(i).getPaymentHistory());
+        }
     }
 }
