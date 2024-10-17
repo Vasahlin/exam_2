@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Person implements Serializable {
     String name;
-    long socialSecurity;
+    Long socialSecurity;
 
     public Person(String name, long socialSecurity) {
         this.name = name;

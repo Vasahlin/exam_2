@@ -6,6 +6,17 @@ import java.time.format.DateTimeParseException;
 
 public final class Validate {
 
+    public static String validateName(String name) throws IllegalArgumentException{
+        if (!validName(name)) {
+            throw new IllegalArgumentException("Name must at least include two characters");
+        }
+        return name;
+    }
+
+    public static boolean equalsExit(String toExamine) {
+        return toExamine.equalsIgnoreCase("exit");
+    }
+
     public static boolean validName(String name) {
         int count = 0;
         for (char c : name.toCharArray()) {
@@ -16,7 +27,15 @@ public final class Validate {
         return (count > 2);
     }
 
-    public static boolean validSocialSecurity(String social) throws IllegalArgumentException {
+   public static String validateSocialSecurity(String social) throws IllegalArgumentException {
+       social = Text.removeHyphen(social);
+       if (!validSocial(social)) {
+           throw new IllegalArgumentException("Social security was not properly formatted");
+       }
+       return social;
+   }
+
+    public static boolean validSocial(String social) throws IllegalArgumentException {
         if (notValidFormat(social)) {
             return false;
         }

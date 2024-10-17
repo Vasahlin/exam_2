@@ -10,7 +10,7 @@ public class Workout implements Serializable{
     Person member;
     LinkedList<LocalDateTime> workoutHistory;
 
-    public Workout(GymMember member, LinkedList<LocalDateTime> workoutHistory) {
+    public Workout(GymMember member) {
         this.member = member;
         this.workoutHistory = member.getWorkoutHistory();
     }
@@ -19,7 +19,7 @@ public class Workout implements Serializable{
         return this.member.getName();
     }
 
-    public long getSocialOfClinet() {
+    public long getSocialOfClient() {
         return this.member.getSocialSecurity();
     }
 

@@ -17,7 +17,7 @@ public class GymMember extends Person implements Serializable {
 
     public GymMember(String name, long socialSecurity, LocalDate firstPayment) {
         super(name, socialSecurity);
-        this.paymentHistory = new LinkedList<LocalDate>();
+        this.paymentHistory = new LinkedList<>();
         this.paymentHistory.add(firstPayment);
     }
 

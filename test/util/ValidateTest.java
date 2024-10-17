@@ -19,9 +19,28 @@ class ValidateTest {
     }
 
     @Test
+    void validateSocialSecurity() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                Validate.validateSocialSecurity("12345-1234"));
+        e = assertThrows(IllegalArgumentException.class, () ->
+                Validate.validateSocialSecurity("123456-123"));
+        e = assertThrows(IllegalArgumentException.class, () ->
+                Validate.validateSocialSecurity("123456-12345"));
+        e = assertThrows(IllegalArgumentException.class, () ->
+                Validate.validateSocialSecurity("123456-1234a"));
+        e = assertThrows(IllegalArgumentException.class, () ->
+                Validate.validateSocialSecurity("a12345-1234"));
+        e = assertThrows(IllegalArgumentException.class, () ->
+                Validate.validateSocialSecurity("123456-12345-"));
+        e = assertThrows(IllegalArgumentException.class, () ->
+                Validate.validateSocialSecurity(""));
+        assertDoesNotThrow(() -> Validate.validateSocialSecurity("820402-1234"));
+    }
+
+    @Test
     void validSocialSecurity() {
-        assertTrue(Validate.validSocialSecurity("7703021234"));
-        assertFalse(Validate.validSocialSecurity("770302"));
+        assertTrue(Validate.validSocial("7703021234"));
+        assertFalse(Validate.validSocial("770302"));
     }
 
     @Test
@@ -38,4 +57,13 @@ class ValidateTest {
         assertTrue(Validate.notValidFormat("a23466789"));
         assertFalse(Validate.notValidFormat("7703021234"));
     }
+
+    @Test
+    void validateName() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> Validate.validateName("1a B"));
+        assertDoesNotThrow(() -> Validate.validateName("1a Ba"));
+    }
+
+
 }

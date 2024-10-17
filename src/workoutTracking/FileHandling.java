@@ -20,9 +20,7 @@ public class FileHandling {
 
 
     protected static byte[] serializeWorkout(GymMember member) throws IOException {
-        Workout workout = new Workout(
-                member, member.getWorkoutHistory());
-
+        Workout workout = new Workout(member);
         try (ByteArrayOutputStream out = new ByteArrayOutputStream();
              ObjectOutputStream stream = new ObjectOutputStream(out)) {
             stream.writeObject(workout);
@@ -108,20 +106,21 @@ public class FileHandling {
                 throw new IndexOutOfBoundsException("Specified index out of bounds");
             }
             buffer.flip();
-            long dataOffset = buffer.getLong();
+
+            long offset = buffer.getLong();
             buffer.rewind();
 
-            long dataNextOffset;
+            long nextOffset;
             if (indexChannel.read(buffer) == -1) {
-                dataNextOffset = dataChannel.size();
+                nextOffset = dataChannel.size();
             } else {
                 buffer.flip();
-                dataNextOffset = buffer.getLong();
+                nextOffset = buffer.getLong();
             }
 
-            int dataSize = (int) (dataNextOffset - dataOffset);
+            int dataSize = (int) (nextOffset - offset);
             byte[] toSerialize = new byte[dataSize];
-            dataChannel.position(dataOffset);
+            dataChannel.position(offset);
             dataChannel.read(ByteBuffer.wrap(toSerialize));
 
             return deserializeWorkout(toSerialize);
