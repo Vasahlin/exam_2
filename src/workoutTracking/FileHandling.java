@@ -222,11 +222,11 @@ public class FileHandling {
             }
 
             int dataSize = (int) (nextOffset - offset);
-            byte[] toSerialize = new byte[dataSize];
+            byte[] toDeserialize = new byte[dataSize];
             dataChannel.position(offset);
-            dataChannel.read(ByteBuffer.wrap(toSerialize));
+            dataChannel.read(ByteBuffer.wrap(toDeserialize));
 
-            return deserializeWorkout(toSerialize);
+            return deserializeWorkout(toDeserialize);
         }
     }
 }
