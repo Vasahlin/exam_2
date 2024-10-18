@@ -51,13 +51,11 @@ public class GymMember extends Person implements Serializable {
     }
 
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(this.getName()).
-                append(", ").
-                append(Text.addHyphen(this.getSocialSecurity())).
-                append(System.lineSeparator()).
-                append("Membership status: ").
-                append(this.activeMembership);
-        return builder.toString();
+        return this.getName() +
+               ", " +
+               Text.addHyphen(this.getSocialSecurity()) +
+               System.lineSeparator() +
+               "Membership status: " +
+               this.activeMembership;
     }
 }

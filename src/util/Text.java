@@ -1,12 +1,17 @@
 package util;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public final class Text {
 
     public enum message {
         MAIN_MENU, ADD_MEMBER, ENTER_CHOICE,
         MEMBER_NAME, MEMBER_SOCIAL, MEMBER_ADDED,
         PAYMENT_MENU, PAYMENT_ADDED, SHOW_MEMBER_MENU,
-        NAME_SOCIAL, NO_SUCH_MEMBER
+        NAME_SOCIAL, NO_SUCH_MEMBER, REGISTER_VISIT,
+        INVALID_FORMATTING, VISIT_HISTORY, NOT_ACTIVE,
+        VISIT_REGISTERED, ALREADY_EXIST, NO_HISTORY
 
     }
     public final static String RED = "\033[31m";
@@ -22,18 +27,26 @@ public final class Text {
                     2. Add membership
                     3. Add payment
                     4. Show member information
-                    5. Exit program
+                    5. Show member visits
+                    6. Exit program
                     """;
             case ENTER_CHOICE -> "Enter choice: ";
             case ADD_MEMBER -> LS + "MODE: ADD MEMBER, enter " + YEL + "Exit" + RESET + " to escape" + LS;
             case MEMBER_NAME -> "Enter name for member: ";
             case MEMBER_SOCIAL -> "Enter social security for member: ";
-            case MEMBER_ADDED -> "Member successfully added";
+            case MEMBER_ADDED -> YEL + "Member successfully added" + RESET + LS + LS;
             case PAYMENT_MENU -> LS + "MODE: ADD PAYMENT, enter " + YEL + "Exit" + RESET + " to escape" + LS;
-            case PAYMENT_ADDED -> "Payment successfully added";
+            case PAYMENT_ADDED -> YEL + "Payment successfully added" + RESET + LS + LS;
             case SHOW_MEMBER_MENU -> LS + "MODE: SHOW MEMBER, enter " + YEL + "Exit" + RESET + " to escape" + LS;
             case NAME_SOCIAL -> "Enter name or social security for member: ";
-            case NO_SUCH_MEMBER -> "No such member exists." + LS;
+            case NO_SUCH_MEMBER -> RED + "No such member exists." + RESET + LS;
+            case REGISTER_VISIT -> LS + "MODE: REGISTER VISIT, enter " + YEL + "Exit" + RESET + " to escape" + LS;
+            case INVALID_FORMATTING -> RED + "Social security was not properly formatted" + LS + RESET;
+            case VISIT_HISTORY -> LS + "MODE: VISIT HISTORY, enter " + YEL + "Exit" + RESET + " to escape" + LS;
+            case NOT_ACTIVE -> RED + "Membership is not active" + RESET + LS;
+            case VISIT_REGISTERED -> YEL + "Visit successfully registered" + RESET + LS;
+            case ALREADY_EXIST -> RED + "Member already in database" + RESET + LS;
+            case NO_HISTORY -> RED + "Member has no registered visits" + RESET + LS;
         };
     }
 
@@ -59,5 +72,10 @@ public final class Text {
                     append("-").append(temp,6,10);
         }
         return builder.toString();
+    }
+
+    public static String formatTime(LocalDateTime time) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
+        return formatter.format(time);
     }
 }

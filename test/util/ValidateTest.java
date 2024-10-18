@@ -2,6 +2,8 @@ package util;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ValidateTest {
@@ -21,19 +23,19 @@ class ValidateTest {
     @Test
     void validateSocialSecurity() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
-                Validate.validateSocialSecurity("12345-1234"));
-        e = assertThrows(IllegalArgumentException.class, () ->
                 Validate.validateSocialSecurity("123456-123"));
         assertEquals("Social security was not properly formatted", e.getMessage());
-        e = assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(IllegalArgumentException.class, () ->
+                Validate.validateSocialSecurity("12345-1234"));
+        assertThrows(IllegalArgumentException.class, () ->
                 Validate.validateSocialSecurity("123456-12345"));
-        e = assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(IllegalArgumentException.class, () ->
                 Validate.validateSocialSecurity("123456-1234a"));
-        e = assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(IllegalArgumentException.class, () ->
                 Validate.validateSocialSecurity("a12345-1234"));
-        e = assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(IllegalArgumentException.class, () ->
                 Validate.validateSocialSecurity("123456-12345-"));
-        e = assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(IllegalArgumentException.class, () ->
                 Validate.validateSocialSecurity(""));
         assertDoesNotThrow(() -> Validate.validateSocialSecurity("820402-1234"));
     }
@@ -61,7 +63,7 @@ class ValidateTest {
 
     @Test
     void validateName() {
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+        assertThrows(IllegalArgumentException.class,
                 () -> Validate.validateName("1a B"));
         assertDoesNotThrow(() -> Validate.validateName("1a Ba"));
     }
@@ -73,5 +75,13 @@ class ValidateTest {
        assertFalse(Validate.ableToParseSocial("891023-12345"));
        assertFalse(Validate.ableToParseSocial("8910232-1234"));
        assertFalse(Validate.ableToParseSocial("891023-a12"));
+    }
+
+    @Test
+    void withinOpeningHours() {
+        LocalDateTime test = LocalDateTime.of(2024,10,17,11,30);
+        assertTrue(Validate.withinOpeningHours(test));
+        test = LocalDateTime.of(2024,10,17,22,30);
+        assertFalse(Validate.withinOpeningHours(test));
     }
 }

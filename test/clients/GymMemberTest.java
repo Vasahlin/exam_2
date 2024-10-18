@@ -14,9 +14,16 @@ class GymMemberTest {
     @Test
     void updateMembership() {
         assertFalse(m.activeMembership);
-        m.addPayment(LocalDate.of(2024,8,20));
+        LocalDate currentDate = LocalDate.now();
+        m.addPayment(currentDate);
         m.updateMembership();
         assertTrue(m.activeMembership);
+    }
+
+    @Test
+    void indexTest() {
+        //System dependent on a new member without any registered visits has a map value of -1
+        assertEquals(-1L, m.getFileIndex());
     }
 
     @Test

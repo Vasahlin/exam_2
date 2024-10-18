@@ -23,7 +23,7 @@ class MembersTest {
 
     @Test
     void updateMembership() {
-        Members test = new Members(m.getMemberList());
+        Members test = new Members(m.memberList());
         assertFalse(test.getMember(1).activeMembership);
         test.getMember(1).addPayment(LocalDate.parse("2024-07-01"));
         test.updateMemberships();
@@ -46,7 +46,7 @@ class MembersTest {
 
     @Test
     void memberIndex() {
-        Members testList = new Members(m.getMemberList());
+        Members testList = new Members(m.memberList());
         assertEquals(0, testList.getMemberIndex(7703021234L));
         assertEquals(1, testList.getMemberIndex(8204021234L));
         assertEquals(2, testList.getMemberIndex(8512021234L));
@@ -64,7 +64,7 @@ class MembersTest {
 
     @Test
     void addMemberTestSortedByLong() {
-        Members test = new Members(m.getMemberList());
+        Members test = new Members(m.memberList());
         assertEquals("Alhambra Aromes", test.getMember(0).getName());
         test.addMember(new GymMember("First", 7512021234L, LocalDate.parse("2018-03-12")));
         assertEquals("First", test.getMember(0).getName());
@@ -79,7 +79,7 @@ class MembersTest {
         ArrayList<GymMember> expected = new ArrayList<>(Arrays.asList(m1,m2));
         expected.sort(Comparator.comparing(Person::getName));
 
-        Members testList = new Members(m.getMemberList());
+        Members testList = new Members(m.memberList());
         testList.addMember(new GymMember(
                 "Alhambra Aromes", 7703024321L, LocalDate.parse("2024-07-01")));
 

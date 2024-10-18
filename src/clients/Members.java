@@ -4,9 +4,7 @@ import java.util.ArrayList;
 
 import java.util.Comparator;
 
-public class Members {
-    private ArrayList<GymMember> memberList;
-
+public record Members(ArrayList<GymMember> memberList) {
     public Members(ArrayList<GymMember> memberList) {
         this.memberList = memberList;
         this.updateMemberships();
@@ -17,13 +15,10 @@ public class Members {
         return this.memberList.get(index);
     }
 
-    public ArrayList<GymMember> getMemberList() {
-        return memberList;
-    }
-
     public void addMember(GymMember member) {
         memberList.add(member);
         sortBySocial();
+        member.updateMembership();
     }
 
     public void updateMemberships() {

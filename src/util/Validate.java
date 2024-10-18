@@ -1,6 +1,8 @@
 package util;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -14,7 +16,7 @@ public final class Validate {
     }
 
     public static boolean equalsExit(String toExamine) {
-        return toExamine.equalsIgnoreCase("exit") || toExamine.equals("5");
+        return toExamine.equalsIgnoreCase("exit") || toExamine.equals("6");
     }
 
     public static boolean validName(String name) {
@@ -25,6 +27,14 @@ public final class Validate {
             }
         }
         return (count > 2);
+    }
+
+    public static boolean withinOpeningHours(LocalDateTime toInspect) {
+        LocalTime opening = LocalTime.of(10,0);
+        LocalTime close = LocalTime.of(22,0);
+        LocalTime time = toInspect.toLocalTime();
+
+        return time.isAfter(opening) && time.isBefore(close);
     }
 
     public static boolean ableToParseSocial(String social) {

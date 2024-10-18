@@ -34,7 +34,7 @@ public final class IO {
     }
 
     public static String readLine() throws IOException {
-        return reader.readLine();
+        return reader.readLine().trim();
     }
 
     public static void printMessage(Text.message instruction) {
@@ -61,6 +61,20 @@ public final class IO {
                     Text.generateMessage(Text.message.NAME_SOCIAL));    break;
             case NO_SUCH_MEMBER: System.out.print(
                     Text.generateMessage(Text.message.NO_SUCH_MEMBER)); break;
+            case REGISTER_VISIT: System.out.print(
+                    Text.generateMessage(Text.message.REGISTER_VISIT)); break;
+            case INVALID_FORMATTING: System.out.print(
+                    Text.generateMessage(Text.message.INVALID_FORMATTING)); break;
+            case VISIT_HISTORY: System.out.print(
+                    Text.generateMessage(Text.message.VISIT_HISTORY)); break;
+            case NOT_ACTIVE: System.out.print(
+                    Text.generateMessage(Text.message.NOT_ACTIVE)); break;
+            case VISIT_REGISTERED: System.out.print(
+                    Text.generateMessage(Text.message.VISIT_REGISTERED)); break;
+            case ALREADY_EXIST: System.out.print(
+                    Text.generateMessage(Text.message.ALREADY_EXIST)); break;
+            case NO_HISTORY: System.out.print(
+                    Text.generateMessage(Text.message.NO_HISTORY)); break;
             default: break;
         }
     }
