@@ -21,7 +21,7 @@ class TextTest {
     }
 
     @Test
-    void testRemoveHyphen() {
+    void addHyphen() {
         String expected = "870823-1234";
         String result = Text.addHyphen(8708231234L);
         assertEquals(expected, result);
